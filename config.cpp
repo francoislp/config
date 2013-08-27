@@ -1,10 +1,15 @@
+// Author: Francois Leduc-Primeau
+// Copyright 2013
+
 #include "config.hpp"
 #include <regex>
 
 using std::string;
 using std::vector;
+using std::regex;
+using std::regex_search;
 
-bool config::initCL(int argc, char** argv) {
+void config::initCL(int argc, char** argv) {
   for(uint i=1; i<argc; i++) {
     string s(argv[i]);
     std::smatch tokens; // will return the matches as std::string objects
@@ -17,12 +22,9 @@ bool config::initCL(int argc, char** argv) {
       m_argMap[ tokens[1] ] = "";
     }
     else {
-      cerr << "Invalid option: "<<s << endl;
-      return false;
+      throw syntax_exception(s);
     }
   }
-
-  return true;
 }
 
 uint config::parseParamUInt(string key) {

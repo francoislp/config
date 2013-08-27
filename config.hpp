@@ -25,6 +25,19 @@ private:
   std::string m_keyName;
 };
 
+class syntax_exception : public std::exception {
+public:
+  syntax_exception(std::string& offender)
+    : m_offender(offender) {}
+
+  ~syntax_exception() throw() {}
+
+  const char* what() const throw() { return m_offender.c_str(); }
+
+private:
+  std::string m_offender;
+};
+
 /**
  * Parsing and retrieving values from a configuration.
  */
@@ -42,9 +55,9 @@ public:
    *
    *@param argc The number of elements in argv.
    *@param argv Array of c-strings.
-   *@return True if parsing was successful, false otherwise.
+   *@throws syntax_exception If some element has invalid syntax.
    */
-  bool initCL(int argc, char** argv);
+  void initCL(int argc, char** argv);
 
   //TODO: in the future, could support initializing from a file
 
