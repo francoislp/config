@@ -3,6 +3,7 @@
 
 #include "config.hpp"
 #include <regex>
+#include <stdlib.h>
 
 using std::string;
 using std::vector;

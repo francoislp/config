@@ -45,7 +45,7 @@ class config {
 
 public:
 
-  config();
+  config() {}
 
   /**
    * Initialize the configuration from an array of c-strings (as when
