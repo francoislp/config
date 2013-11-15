@@ -83,7 +83,7 @@ bool config::parseParamBool(string key) {
   }
 }
 
-string config::parseParamString(string key) {
+string config::getParamString(string key) {
   auto it = m_argMap.find(key);
   if(it != m_argMap.end()) {
     return it->second;
@@ -193,6 +193,27 @@ bool config::sequenceParser(string key, vector<double>& seqReturn) {
   }
 }
 
+bool config::listParser(string key, vector<double>& listReturn) {
+  auto it = m_argMap.find(key);
+  if(it == m_argMap.end()) throw key_not_found(key);
+
+  listReturn.clear();
+
+  // check for, and then remove, the curly brackets
+  regex r("\\{(.+)\\}");
+  std::smatch regexMatch;
+  if(regex_search(it->second, regexMatch, r)) {
+    vector<string> tokens;
+    tokens = split(regexMatch[0], ',', tokens);
+    for(int i=0; i<tokens.size(); i++) {
+      listReturn.push_back(atof(tokens[i].c_str()));
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
 // Private
 
 void config::getline_nc(ifstream& ifs, string& line) {
@@ -206,4 +227,14 @@ void config::getline_nc(ifstream& ifs, string& line) {
     sstream >> std::ws; // extract whitespace
     firstchar = sstream.peek();
   }
+}
+
+vector<string>& config::split(const string& s, char delim, vector<string>& elems) {
+  // http://stackoverflow.com/questions/236129/how-to-split-a-string-in-c
+  stringstream ss(s);
+  string item;
+  while (std::getline(ss, item, delim)) {
+    elems.push_back(item);
+  }
+  return elems;
 }

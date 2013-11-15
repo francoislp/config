@@ -87,7 +87,7 @@ public:
 
   bool   parseParamBool(std::string key);
 
-  std::string parseParamString(std::string key);
+  std::string getParamString(std::string key);
 
   /**
    * Returns true if the option has been specified, false
@@ -116,16 +116,36 @@ public:
    */
   bool sequenceParser(std::string key, std::vector<double>& seqReturn);
 
+  /**
+   * Parses a string describing a list, of the form "{<item1>,
+   * <item2>, ...}". Each element in the list is parsed as a
+   * double-precision floating-point number.
+   *@param key        Name of the key for the desired list.
+   *@param listReturn This vector is cleared and elements are added to it.
+   *@return 'true' if a valid list is found, 'false' otherwise (in that case 
+   *        "listReturn" will be empty)
+   */
+  bool listParser(std::string key, std::vector<double>& listReturn);
+
 
 private:
 
   /**
    * Returns the next line from the ifstream object, skipping over
    * comment lines.
-   *@return The next non-comment line, or an empty string if the end 
-   *        of stream has been reached.
+   *@param ifs
+   *@param line  Set to the next non-comment line, or to an empty 
+   *             string if the end of stream has been reached.
    */
   void getline_nc(std::ifstream& ifs, std::string& line);
+
+  /**
+   * Tokenizes a string according to the delimiter specified. The
+   * tokens are added to "elems".
+   */
+  std::vector<std::string>& split(const std::string& s, char delim, std::vector<std::string>& elems);
+
+  // ---------- Data Members ----------
 
   std::map<std::string, std::string> m_argMap;
 };
