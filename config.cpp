@@ -83,6 +83,16 @@ bool config::parseParamBool(string key) {
   }
 }
 
+string config::parseParamString(string key) {
+  auto it = m_argMap.find(key);
+  if(it != m_argMap.end()) {
+    return it->second;
+  }
+  else {
+    throw key_not_found(key);
+  }
+}
+
 bool config::checkOption(string key) {
   auto it = m_argMap.find(key);
   if(it != m_argMap.end()) return true;

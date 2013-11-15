@@ -87,6 +87,8 @@ public:
 
   bool   parseParamBool(std::string key);
 
+  std::string parseParamString(std::string key);
+
   /**
    * Returns true if the option has been specified, false
    * otherwise. Only the option name must be provided as the key,
