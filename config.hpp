@@ -38,6 +38,20 @@ private:
   std::string m_offender;
 };
 
+class file_exception : public std::exception {
+public:
+  file_exception(std::string& filepath)
+    : m_filepath(filepath) {}
+
+  ~file_exception() throw() {}
+
+  /// Returns the filepath of the file that triggered the exception.
+  const char* what() const throw() { return m_filepath.c_str(); }
+
+private:
+  std::string m_filepath;
+};
+
 /**
  * Parsing and retrieving values from a configuration.
  */
@@ -48,7 +62,7 @@ public:
   config() {}
 
   /**
-   * Initialize the configuration from an array of c-strings (as when
+   * Initializes the configuration from an array of c-strings (as when
    * passing arguments on the Command Line). Each element can have one
    * of two types: "key-value pair", or "option". A key-value pair is
    * "<key>=<value>", and an option is "--<option>".
@@ -59,7 +73,13 @@ public:
    */
   void initCL(int argc, char** argv);
 
-  //TODO: in the future, could support initializing from a file
+  /**
+   * Initializes the configuration from a file. Keys that already exist
+   * are not deleted, but the values in the file takes precedence. Only
+   * the "key-value pair" syntax is allowed in the file, as well as
+   * comment lines starting with "#".
+   */
+  void initFile(std::string filepath);
 
   uint   parseParamUInt(std::string key);
 
@@ -96,6 +116,14 @@ public:
 
 
 private:
+
+  /**
+   * Returns the next line from the ifstream object, skipping over
+   * comment lines.
+   *@return The next non-comment line, or an empty string if the end 
+   *        of stream has been reached.
+   */
+  void getline_nc(std::ifstream& ifs, std::string& line);
 
   std::map<std::string, std::string> m_argMap;
 };

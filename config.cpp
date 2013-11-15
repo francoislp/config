@@ -4,11 +4,18 @@
 #include "config.hpp"
 #include <regex>
 #include <stdlib.h>
+#include <fstream>
+#include <sstream>
+
+// Character indicating a line comment
+#define COMMENTCHAR '#'
 
 using std::string;
 using std::vector;
 using std::regex;
 using std::regex_search;
+using std::ifstream;
+using std::stringstream;
 
 void config::initCL(int argc, char** argv) {
   for(uint i=1; i<argc; i++) {
@@ -24,6 +31,27 @@ void config::initCL(int argc, char** argv) {
     }
     else {
       throw syntax_exception(s);
+    }
+  }
+}
+
+void config::initFile(string filepath) {
+  ifstream ifs(filepath.c_str());
+  if(!ifs.good()) throw file_exception(filepath);
+
+  string curLine;
+  while(ifs.good()) {
+    getline_nc(ifs, curLine);
+    if(curLine != "") {
+      // similar code as in initCL(...)
+      std::smatch tokens; // will return the matches as std::string objects
+      regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)");
+      if(regex_search(curLine, tokens, r)) {
+        m_argMap[ tokens[1] ] = tokens[2];
+      }
+      else {
+        throw syntax_exception(curLine);
+      }
     }
   }
 }
@@ -152,5 +180,20 @@ bool config::sequenceParser(string key, vector<double>& seqReturn) {
   } else {
     // invalid syntax
     return false;
+  }
+}
+
+// Private
+
+void config::getline_nc(ifstream& ifs, string& line) {
+  char firstchar = COMMENTCHAR;
+
+  while(firstchar == COMMENTCHAR) {
+    if(!ifs.eof()) std::getline(ifs, line);
+    else line = "";
+    stringstream sstream;
+    sstream << line;
+    sstream >> std::ws; // extract whitespace
+    firstchar = sstream.peek();
   }
 }
