@@ -78,6 +78,10 @@ public:
    * are not deleted, but the values in the file takes precedence. Only
    * the "key-value pair" syntax is allowed in the file, as well as
    * comment lines starting with "#".
+   *@param filepath
+   *@throws file_exception   If there is a problem reading from the file
+   *                         specified by "filepath".
+   *@throws syntax_exception If some line has invalid syntax.
    */
   void initFile(std::string filepath);
 

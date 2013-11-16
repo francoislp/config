@@ -45,7 +45,7 @@ void config::initFile(string filepath) {
     if(curLine != "") {
       // similar code as in initCL(...)
       std::smatch tokens; // will return the matches as std::string objects
-      regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)");
+      regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*(.+)$");
       if(regex_search(curLine, tokens, r)) {
         m_argMap[ tokens[1] ] = tokens[2];
       }
@@ -204,7 +204,9 @@ bool config::listParser(string key, vector<double>& listReturn) {
   std::smatch regexMatch;
   if(regex_search(it->second, regexMatch, r)) {
     vector<string> tokens;
-    tokens = split(regexMatch[0], ',', tokens);
+    // the first element in regexMatch is the whole expression, while
+    // regexMatch[1] contains the expression within parentheses.
+    tokens = split(regexMatch[1], ',', tokens);
     for(int i=0; i<tokens.size(); i++) {
       listReturn.push_back(atof(tokens[i].c_str()));
     }
