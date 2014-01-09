@@ -122,6 +122,16 @@ public:
 
   /**
    * Parses a string describing a list, of the form "{<item1>,
+   * <item2>, ...}". Each element in the list is parsed as an integer.
+   *@param key        Name of the key for the desired list.
+   *@param listReturn This vector is cleared and elements are added to it.
+   *@return 'true' if a valid list is found, 'false' otherwise (in that case 
+   *        "listReturn" will be empty)
+   */
+  bool listParser(std::string key, std::vector<int>& listReturn);
+
+  /**
+   * Parses a string describing a list, of the form "{<item1>,
    * <item2>, ...}". Each element in the list is parsed as a
    * double-precision floating-point number.
    *@param key        Name of the key for the desired list.

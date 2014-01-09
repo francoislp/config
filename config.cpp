@@ -193,6 +193,29 @@ bool config::sequenceParser(string key, vector<double>& seqReturn) {
   }
 }
 
+bool config::listParser(string key, vector<int>& listReturn) {
+  auto it = m_argMap.find(key);
+  if(it == m_argMap.end()) throw key_not_found(key);
+
+  listReturn.clear();
+
+  // check for, and then remove, the curly brackets
+  regex r("\\{(.+)\\}");
+  std::smatch regexMatch;
+  if(regex_search(it->second, regexMatch, r)) {
+    vector<string> tokens;
+    // the first element in regexMatch is the whole expression, while
+    // regexMatch[1] contains the expression within parentheses.
+    tokens = split(regexMatch[1], ',', tokens);
+    for(int i=0; i<tokens.size(); i++) {
+      listReturn.push_back(atoi(tokens[i].c_str()));
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool config::listParser(string key, vector<double>& listReturn) {
   auto it = m_argMap.find(key);
   if(it == m_argMap.end()) throw key_not_found(key);
