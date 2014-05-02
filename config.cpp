@@ -17,6 +17,10 @@ using std::regex_search;
 using std::ifstream;
 using std::stringstream;
 
+config::config()
+  : m_checkKeys(false)
+{}
+
 void config::initCL(int argc, char** argv) {
   for(uint i=1; i<argc; i++) {
     string s(argv[i]);
@@ -24,10 +28,16 @@ void config::initCL(int argc, char** argv) {
     regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)");
     regex r2("--([[:alpha:]]+)[[:space:]]*$"); // double [[ is required
     if(regex_search(s, tokens, r)) {
-      m_argMap[ tokens[1] ] = tokens[2];
+      string key = tokens[1];
+      if(m_validKeys.find(key) == m_validKeys.cend())
+        throw key_not_found(key);
+      m_argMap[ key ] = tokens[2];
     }
     else if(regex_search(s, tokens, r2)) {
-      m_argMap[ tokens[1] ] = "";
+      string option = tokens[1];
+      if(m_validOptions.find(option) == m_validOptions.cend())
+        throw key_not_found(option);
+      m_argMap[ option ] = "";
     }
     else {
       throw syntax_exception(s);
@@ -47,7 +57,10 @@ void config::initFile(string filepath) {
       std::smatch tokens; // will return the matches as std::string objects
       regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*(.+)$");
       if(regex_search(curLine, tokens, r)) {
-        m_argMap[ tokens[1] ] = tokens[2];
+        string key = tokens[1];
+        if(m_validKeys.find(key) == m_validKeys.cend())
+          throw key_not_found(key);
+        m_argMap[ key ] = tokens[2];
       }
       else {
         throw syntax_exception(curLine);

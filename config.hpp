@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <unordered_set>
 
 typedef unsigned int uint;
 
@@ -59,7 +60,7 @@ class config {
 
 public:
 
-  config() {}
+  config();
 
   /**
    * Initializes the configuration from an array of c-strings (as when
@@ -69,6 +70,7 @@ public:
    *
    *@param argc The number of elements in argv.
    *@param argv Array of c-strings.
+   *@throws key_not_found    If a key or option is deemed invalid.
    *@throws syntax_exception If some element has invalid syntax.
    */
   void initCL(int argc, char** argv);
@@ -81,9 +83,26 @@ public:
    *@param filepath
    *@throws file_exception   If there is a problem reading from the file
    *                         specified by "filepath".
+   *@throws key_not_found    If a key is deemed invalid.
    *@throws syntax_exception If some line has invalid syntax.
    */
   void initFile(std::string filepath);
+
+  /**
+   * Defines key "key" as being valid in a configuration. Calling this
+   * method automatically activates key checking, and an exception
+   * will be thrown if invalid keys are encountered while parsing a
+   * configuration.
+   */
+  void addValidKey(std::string key) { 
+    m_checkKeys=true;
+    m_validKeys.insert(key);
+  }
+
+  void addValidOption(std::string option) {
+    m_checkKeys=true;
+    m_validOptions.insert(option);
+  }
 
   uint   parseParamUInt(std::string key);
 
@@ -162,6 +181,15 @@ private:
   // ---------- Data Members ----------
 
   std::map<std::string, std::string> m_argMap;
+
+  /**
+   * When this is true, config keys and options are checked against
+   * the set m_validKeys and m_validOptions, respectively.
+   */
+  bool m_checkKeys;
+
+  std::unordered_set<std::string> m_validKeys;
+  std::unordered_set<std::string> m_validOptions;
 };
 
 #endif
