@@ -29,13 +29,13 @@ void config::initCL(int argc, char** argv) {
     regex r2("--([[:alpha:]]+)[[:space:]]*$"); // double [[ is required
     if(regex_search(s, tokens, r)) {
       string key = tokens[1];
-      if(m_validKeys.find(key) == m_validKeys.cend())
+      if(m_checkKeys && (m_validKeys.find(key) == m_validKeys.cend()))
         throw key_not_found(key);
       m_argMap[ key ] = tokens[2];
     }
     else if(regex_search(s, tokens, r2)) {
       string option = tokens[1];
-      if(m_validOptions.find(option) == m_validOptions.cend())
+      if(m_checkKeys && (m_validOptions.find(option) == m_validOptions.cend()))
         throw key_not_found(option);
       m_argMap[ option ] = "";
     }
