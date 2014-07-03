@@ -53,6 +53,19 @@ private:
   std::string m_filepath;
 };
 
+class invalidkey_exception : public std::exception {
+public:
+  invalidkey_exception(std::string& keyName)
+    : m_keyName(keyName) {}
+
+  ~invalidkey_exception() throw() {}
+
+  const char* what() const throw() { return m_keyName.c_str(); }
+
+private:
+  std::string m_keyName;
+};
+
 /**
  * Parsing and retrieving values from a configuration.
  */
@@ -70,8 +83,8 @@ public:
    *
    *@param argc The number of elements in argv.
    *@param argv Array of c-strings.
-   *@throws key_not_found    If a key or option is deemed invalid.
-   *@throws syntax_exception If some element has invalid syntax.
+   *@throws invalidkey_exception  If a key or option is deemed invalid.
+   *@throws syntax_exception      If some element has invalid syntax.
    */
   void initCL(int argc, char** argv);
 
@@ -81,10 +94,10 @@ public:
    * the "key-value pair" syntax is allowed in the file, as well as
    * comment lines starting with "#".
    *@param filepath
-   *@throws file_exception   If there is a problem reading from the file
-   *                         specified by "filepath".
-   *@throws key_not_found    If a key is deemed invalid.
-   *@throws syntax_exception If some line has invalid syntax.
+   *@throws file_exception        If there is a problem reading from the file
+   *                              specified by "filepath".
+   *@throws invalidkey_exception  If a key is deemed invalid.
+   *@throws syntax_exception      If some line has invalid syntax.
    */
   void initFile(std::string filepath);
 

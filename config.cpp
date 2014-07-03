@@ -30,13 +30,13 @@ void config::initCL(int argc, char** argv) {
     if(regex_search(s, tokens, r)) {
       string key = tokens[1];
       if(m_checkKeys && (m_validKeys.find(key) == m_validKeys.cend()))
-        throw key_not_found(key);
+        throw invalidkey_exception(key);
       m_argMap[ key ] = tokens[2];
     }
     else if(regex_search(s, tokens, r2)) {
       string option = tokens[1];
       if(m_checkKeys && (m_validOptions.find(option) == m_validOptions.cend()))
-        throw key_not_found(option);
+        throw invalidkey_exception(option);
       m_argMap[ option ] = "";
     }
     else {
@@ -58,8 +58,8 @@ void config::initFile(string filepath) {
       regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*(.+)$");
       if(regex_search(curLine, tokens, r)) {
         string key = tokens[1];
-        if(m_validKeys.find(key) == m_validKeys.cend())
-          throw key_not_found(key);
+        if(m_checkKeys && (m_validKeys.find(key) == m_validKeys.cend()))
+          throw invalidkey_exception(key);
         m_argMap[ key ] = tokens[2];
       }
       else {
