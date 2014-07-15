@@ -305,8 +305,10 @@ vector<string>& config::split(const string& s, char delim, vector<string>& elems
   // http://stackoverflow.com/questions/236129/how-to-split-a-string-in-c
   stringstream ss(s);
   string item;
+  ss >> std::ws; // extract leading whitespace
   while (std::getline(ss, item, delim)) {
     elems.push_back(item);
+    ss >> std::ws; // extract leading whitespace of next element
   }
   return elems;
 }
