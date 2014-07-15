@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <sstream>
+#include <boost/filesystem.hpp>
 
 // Character indicating a line comment
 #define COMMENTCHAR '#'
@@ -16,9 +17,12 @@ using std::regex;
 using std::regex_search;
 using std::ifstream;
 using std::stringstream;
+using boost::filesystem::path;
 
 config::config()
-  : m_checkKeys(false)
+  : m_checkKeys(false),
+    m_filePath(""),
+    m_fileName("")
 {}
 
 void config::initCL(int argc, char** argv) {
@@ -46,6 +50,9 @@ void config::initCL(int argc, char** argv) {
 }
 
 void config::initFile(string filepath) {
+  m_filePath = filepath;
+  path p(filepath);
+  m_fileName = p.filename().string();
   ifstream ifs(filepath.c_str());
   if(!ifs.good()) throw file_exception(filepath);
 
@@ -246,6 +253,25 @@ bool config::listParser(string key, vector<double>& listReturn) {
     for(int i=0; i<tokens.size(); i++) {
       listReturn.push_back(atof(tokens[i].c_str()));
     }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool config::listParser(string key, vector<string>& listReturn) {
+  auto it = m_argMap.find(key);
+  if(it == m_argMap.end()) throw key_not_found(key);
+
+  listReturn.clear();
+
+  // check for, and then remove, the curly brackets
+  regex r("\\{(.+)\\}");
+  std::smatch regexMatch;
+  if(regex_search(it->second, regexMatch, r)) {
+    // the first element in regexMatch is the whole expression, while
+    // regexMatch[1] contains the expression within parentheses.
+    listReturn = split(regexMatch[1], ',', listReturn);
     return true;
   } else {
     return false;

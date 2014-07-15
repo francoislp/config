@@ -173,6 +173,28 @@ public:
    */
   bool listParser(std::string key, std::vector<double>& listReturn);
 
+  /**
+   * Parses a string describing a list, of the form "{<item1>,
+   * <item2>, ...}". Each element in the list is parsed as a string.
+   *@param key        Name of the key for the desired list.
+   *@param listReturn This vector is cleared and elements are added to it.
+   *@return 'true' if a valid list is found, 'false' otherwise (in that case 
+   *        "listReturn" will be empty)
+   */
+  bool listParser(std::string key, std::vector<std::string>& listReturn);
+
+  /**
+   * Returns the file path that was passed to initFile(), or an empty
+   * string if initFile() was never called.
+   */
+  std::string getFilePath() { return m_filePath; }
+
+  /**
+   * Returns the name of the file passed to initFile(), without any
+   * preceeding directories, or an empty string if initFile() was
+   * never called.
+   */
+  std::string getFileName() { return m_fileName; }
 
 private:
 
@@ -203,6 +225,15 @@ private:
 
   std::unordered_set<std::string> m_validKeys;
   std::unordered_set<std::string> m_validOptions;
+
+  /// File path that was passed to initFile(), or an empty string.
+  std::string m_filePath;
+
+  /**
+   * File name that was passed to initFile(), excluding any preceeding
+   * directories. Empty string if uninitialized.
+   */
+  std::string m_fileName;
 };
 
 #endif
