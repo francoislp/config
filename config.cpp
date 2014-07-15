@@ -278,6 +278,14 @@ bool config::listParser(string key, vector<string>& listReturn) {
   }
 }
 
+void config::addConfElem(string key, string val) {
+  // make sure key does not already exist
+  auto it = m_argMap.find(key);
+  if(it != m_argMap.end()) throw invalidkey_exception(key);
+
+  m_argMap[ key ] = val;
+}
+
 // Private
 
 void config::getline_nc(ifstream& ifs, string& line) {

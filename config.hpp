@@ -4,6 +4,7 @@
 #ifndef _config_hpp_
 #define _config_hpp_
 
+#include <exception>
 #include <string>
 #include <map>
 #include <vector>
@@ -195,6 +196,12 @@ public:
    * never called.
    */
   std::string getFileName() { return m_fileName; }
+
+  /**
+   * Adds a new string element to the configuration.
+   *@throws invalidkey_exception if the key already exists
+   */
+  void addConfElem(std::string key, std::string val);
 
 private:
 
