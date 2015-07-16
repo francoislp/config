@@ -29,7 +29,7 @@ void config::initCL(int argc, char** argv) {
   for(uint i=1; i<argc; i++) {
     string s(argv[i]);
     std::smatch tokens; // will return the matches as std::string objects
-    regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)");
+    regex r("([[:alpha:]_:]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)");
     regex r2("--([[:alpha:]]+)[[:space:]]*$"); // double [[ is required
     if(regex_search(s, tokens, r)) {
       string key = tokens[1];
@@ -62,7 +62,7 @@ void config::initFile(string filepath) {
     if(curLine != "") {
       // similar code as in initCL(...)
       std::smatch tokens; // will return the matches as std::string objects
-      regex r("([[:alpha:]_]+)[[:space:]]*=[[:space:]]*(.+)$");
+      regex r("([[:alpha:]_:]+)[[:space:]]*=[[:space:]]*(.+)$");
       if(regex_search(curLine, tokens, r)) {
         string key = tokens[1];
         if(m_checkKeys && (m_validKeys.find(key) == m_validKeys.cend()))
