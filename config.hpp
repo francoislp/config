@@ -203,6 +203,11 @@ public:
    */
   void addConfElem(std::string key, std::string val);
 
+	/**
+	 * Checks whether the specified key exists in the configuration.
+	 */
+	bool keyExists(std::string key);
+
 private:
 
   /**

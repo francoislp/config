@@ -286,6 +286,11 @@ void config::addConfElem(string key, string val) {
   m_argMap[ key ] = val;
 }
 
+bool config::keyExists(string key) {
+	auto it = m_argMap.find(key);
+	return it != m_argMap.end();
+}
+
 // Private
 
 void config::getline_nc(ifstream& ifs, string& line) {
