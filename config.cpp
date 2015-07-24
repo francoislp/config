@@ -304,6 +304,8 @@ void config::getline_nc(ifstream& ifs, string& line) {
     sstream >> std::ws; // extract whitespace
     firstchar = sstream.peek();
   }
+  // trim leading and trailing whitespace
+  line = trim(line);
 }
 
 vector<string>& config::split(const string& s, char delim, vector<string>& elems) {
@@ -316,4 +318,24 @@ vector<string>& config::split(const string& s, char delim, vector<string>& elems
     ss >> std::ws; // extract leading whitespace of next element
   }
   return elems;
+}
+
+// http://stackoverflow.com/questions/25829143/c-trim-whitespace-from-a-string
+std::string& config::trim(std::string & str)
+{
+   return ltrim(rtrim(str));
+}
+
+std::string& config::ltrim(std::string & str)
+{
+  auto it2 =  std::find_if( str.begin() , str.end() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
+  str.erase( str.begin() , it2);
+  return str;   
+}
+
+std::string& config::rtrim(std::string & str)
+{
+  auto it1 =  std::find_if( str.rbegin() , str.rend() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
+  str.erase( str.begin() + (  str.rend() - it1 ) , str.end() );
+  return str;   
 }

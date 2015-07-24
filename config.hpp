@@ -225,6 +225,10 @@ private:
    */
   std::vector<std::string>& split(const std::string& s, char delim, std::vector<std::string>& elems);
 
+	std::string& trim(std::string& str);
+	std::string& ltrim(std::string& str);
+	std::string& rtrim(std::string& str);
+
   // ---------- Data Members ----------
 
   std::map<std::string, std::string> m_argMap;
