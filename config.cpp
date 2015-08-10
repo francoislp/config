@@ -2,7 +2,13 @@
 // Copyright 2013
 
 #include "config.hpp"
+
+#ifdef USE_BOOST_REGEX
+#include <boost/regex.hpp>
+#else
 #include <regex>
+#endif
+
 #include <stdlib.h>
 #include <fstream>
 #include <sstream>
@@ -13,11 +19,19 @@
 
 using std::string;
 using std::vector;
-using std::regex;
-using std::regex_search;
 using std::ifstream;
 using std::stringstream;
 using boost::filesystem::path;
+
+#ifdef USE_BOOST_REGEX
+using boost::regex;
+using boost::regex_search;
+using boost::smatch;
+#else
+using std::regex;
+using std::regex_search;
+using std::smatch;
+#endif
 
 config::config()
   : m_checkKeys(false),
@@ -28,9 +42,19 @@ config::config()
 void config::initCL(int argc, char** argv) {
   for(uint i=1; i<argc; i++) {
     string s(argv[i]);
-    std::smatch tokens; // will return the matches as std::string objects
-    regex r("([[:alpha:][:digit:]_:]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)");
-    regex r2("--([[:alpha:][:digit:]]+)[[:space:]]*$"); // double [[ is required
+    smatch tokens; // will return the matches as std::string objects
+
+    const string keyValRegex= "([[:alpha:][:digit:]_:]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)";
+    const string r2Expr= "--([[:alpha:][:digit:]]+)[[:space:]]*$"; // double [[ is required
+
+#ifdef USE_BOOST_REGEX
+    regex r(keyValRegex, boost::regex::extended);
+    regex r2(r2Expr, boost::regex::extended);
+#else
+    regex r(keyValRegex);
+    regex r2(r2Expr); 
+#endif
+    
     if(regex_search(s, tokens, r)) {
       string key = tokens[1];
       if(m_checkKeys && (m_validKeys.find(key) == m_validKeys.cend()))
@@ -61,13 +85,20 @@ void config::initFile(string filepath) {
     getline_nc(ifs, curLine);
     if(curLine != "") {
       // similar code as in initCL(...)
-      std::smatch tokens; // will return the matches as std::string objects
-      regex r("([[:alpha:]_:]+)[[:space:]]*=[[:space:]]*(.+)$");
+      smatch tokens; // will return the matches as std::string objects
+      const string keyValRegex= "([[:alpha:]_:]+)[[:space:]]*=[[:space:]]*([^[:space:]].*)[[:space:]]*$";
+
+#ifdef USE_BOOST_REGEX
+      regex r(keyValRegex, boost::regex::extended);
+#else
+      regex r(keyValRegex);
+#endif
       if(regex_search(curLine, tokens, r)) {
         string key = tokens[1];
         if(m_checkKeys && (m_validKeys.find(key) == m_validKeys.cend()))
           throw invalidkey_exception(key);
-        m_argMap[ key ] = tokens[2];
+        string val = tokens[2];
+        m_argMap[ key ] = val;
       }
       else {
         throw syntax_exception(curLine);
@@ -126,8 +157,13 @@ bool config::sequenceParser(string key, vector<uint>& seqReturn) {
   seqReturn.clear();
   int start, incr, end;
 
-  std::smatch tokens;
-  regex r("([[:digit:]]+):([[:digit:]]+):([[:digit:]]+)");
+  smatch tokens;
+  const string seqRegex= "([[:digit:]]+):([[:digit:]]+):([[:digit:]]+)";
+#ifdef USE_BOOST_REGEX
+  regex r(seqRegex, boost::regex::extended);
+#else
+  regex r(seqRegex);
+#endif
   if(regex_search(it->second, tokens, r)) {
     string s1(tokens[1]);
     string s2(tokens[2]);
@@ -163,11 +199,19 @@ bool config::sequenceParser(string key, vector<double>& seqReturn) {
   seqReturn.clear();
 
   // exponential sequence syntax: <start>*<multiplier>:<end>
-  regex r("^([[:digit:]]+(\\.[[:digit:]]+)?)\\*([[:digit:]]+(\\.[[:digit:]]+)?):([[:digit:]]+(\\.[[:digit:]]+)?)$");
+  const string expSeqRegex= "^([[:digit:]]+(\\.[[:digit:]]+)?)\\*([[:digit:]]+(\\.[[:digit:]]+)?):([[:digit:]]+(\\.[[:digit:]]+)?)$";
   // linear sequence syntax: <start>:<incr>:<end>
-  regex r2("^([[:digit:]]+(\\.[[:digit:]]+)?):([[:digit:]]+(\\.[[:digit:]]+)?):([[:digit:]]+(\\.[[:digit:]]+)?)$");
+  const string linSeqRegex= "^([[:digit:]]+(\\.[[:digit:]]+)?):([[:digit:]]+(\\.[[:digit:]]+)?):([[:digit:]]+(\\.[[:digit:]]+)?)$";
+  
+#ifdef USE_BOOST_REGEX
+  regex r(expSeqRegex, boost::regex::extended);
+  regex r2(linSeqRegex, boost::regex::extended);
+#else
+  regex r(expSeqRegex);
+  regex r2(linSeqRegex);
+#endif
 
-  std::smatch tokens;
+  smatch tokens;
   if(regex_search(it->second, tokens, r)) {
     // exponential sequence
     string s1(tokens[1]);
@@ -221,8 +265,9 @@ bool config::listParser(string key, vector<int>& listReturn) {
 
   // check for, and then remove, the curly brackets
   regex r("\\{(.+)\\}");
-  std::smatch regexMatch;
-  if(regex_search(it->second, regexMatch, r)) {
+  smatch regexMatch;
+  string rawString= it->second;
+  if(regex_search(rawString, regexMatch, r)) {
     vector<string> tokens;
     // the first element in regexMatch is the whole expression, while
     // regexMatch[1] contains the expression within parentheses.
@@ -244,7 +289,7 @@ bool config::listParser(string key, vector<double>& listReturn) {
 
   // check for, and then remove, the curly brackets
   regex r("\\{(.+)\\}");
-  std::smatch regexMatch;
+  smatch regexMatch;
   if(regex_search(it->second, regexMatch, r)) {
     vector<string> tokens;
     // the first element in regexMatch is the whole expression, while
@@ -267,7 +312,7 @@ bool config::listParser(string key, vector<string>& listReturn) {
 
   // check for, and then remove, the curly brackets
   regex r("\\{(.+)\\}");
-  std::smatch regexMatch;
+  smatch regexMatch;
   if(regex_search(it->second, regexMatch, r)) {
     // the first element in regexMatch is the whole expression, while
     // regexMatch[1] contains the expression within parentheses.
