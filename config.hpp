@@ -63,20 +63,20 @@ public:
     m_validOptions.insert(option);
   }
 
-  uint   parseParamUInt(std::string key);
+  uint   parseParamUInt(std::string key) const;
 
-  double parseParamDouble(std::string key);
+  double parseParamDouble(std::string key) const;
 
-  bool   parseParamBool(std::string key);
+  bool   parseParamBool(std::string key) const;
 
-  std::string getParamString(std::string key);
+  std::string getParamString(std::string key) const;
 
   /**
    * Returns true if the option has been specified, false
    * otherwise. Only the option name must be provided as the key,
    * without the "--".
    */
-  bool checkOption(std::string key);
+  bool checkOption(std::string key) const;
 
   /**
    * Parses syntax describing a sequence of integers, and adds each element in the
@@ -86,7 +86,7 @@ public:
    *@return 'true' if a valid sequence was found, 'false' otherwise (in that case 
    *        seqReturn will be empty)
    */
-  bool sequenceParser(std::string key, std::vector<uint>& seqReturn);
+  bool sequenceParser(std::string key, std::vector<uint>& seqReturn) const;
 
   /**
    * Parses syntax describing a sequence of real numbers, and adds each element
@@ -96,7 +96,7 @@ public:
    *@return 'true' if a valid sequence was found, 'false' otherwise (in that case 
    *        seqReturn will be empty)
    */
-  bool sequenceParser(std::string key, std::vector<double>& seqReturn);
+  bool sequenceParser(std::string key, std::vector<double>& seqReturn) const;
 
   /**
    * Parses a string describing a list, of the form "{<item1>,
@@ -106,7 +106,7 @@ public:
    *@return 'true' if a valid list is found, 'false' otherwise (in that case 
    *        "listReturn" will be empty)
    */
-  bool listParser(std::string key, std::vector<int>& listReturn);
+  bool listParser(std::string key, std::vector<int>& listReturn) const;
 
   /**
    * Parses a string describing a list, of the form "{<item1>,
@@ -117,7 +117,7 @@ public:
    *@return 'true' if a valid list is found, 'false' otherwise (in that case 
    *        "listReturn" will be empty)
    */
-  bool listParser(std::string key, std::vector<double>& listReturn);
+  bool listParser(std::string key, std::vector<double>& listReturn) const;
 
   /**
    * Parses a string describing a list, of the form "{<item1>,
@@ -127,20 +127,20 @@ public:
    *@return 'true' if a valid list is found, 'false' otherwise (in that case 
    *        "listReturn" will be empty)
    */
-  bool listParser(std::string key, std::vector<std::string>& listReturn);
+  bool listParser(std::string key, std::vector<std::string>& listReturn) const;
 
   /**
    * Returns the file path that was passed to initFile(), or an empty
    * string if initFile() was never called.
    */
-  std::string getFilePath() { return m_filePath; }
+  std::string getFilePath() const { return m_filePath; }
 
   /**
    * Returns the name of the file passed to initFile(), without any
    * preceeding directories, or an empty string if initFile() was
    * never called.
    */
-  std::string getFileName() { return m_fileName; }
+  std::string getFileName() const { return m_fileName; }
 
   /**
    * Adds a new string element to the configuration.
@@ -151,7 +151,7 @@ public:
 	/**
 	 * Checks whether the specified key exists in the configuration.
 	 */
-	bool keyExists(std::string key);
+	bool keyExists(std::string key) const;
 
 private:
 
@@ -168,11 +168,11 @@ private:
    * Tokenizes a string according to the delimiter specified. The
    * tokens are added to "elems".
    */
-  std::vector<std::string>& split(const std::string& s, char delim, std::vector<std::string>& elems);
+  std::vector<std::string>& split(const std::string& s, char delim, std::vector<std::string>& elems) const;
 
-	std::string& trim(std::string& str);
-	std::string& ltrim(std::string& str);
-	std::string& rtrim(std::string& str);
+	std::string& trim(std::string& str) const;
+	std::string& ltrim(std::string& str) const;
+	std::string& rtrim(std::string& str) const;
 
   // ---------- Data Members ----------
 

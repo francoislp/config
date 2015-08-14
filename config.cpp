@@ -107,7 +107,7 @@ void config::initFile(string filepath) {
   }
 }
 
-uint config::parseParamUInt(string key) {
+uint config::parseParamUInt(string key) const {
   auto it = m_argMap.find(key);
   if(it != m_argMap.end()) return atoi(it->second.c_str());
   else {
@@ -115,7 +115,7 @@ uint config::parseParamUInt(string key) {
   }
 }
 
-double config::parseParamDouble(string key) {
+double config::parseParamDouble(string key) const {
   auto it = m_argMap.find(key);
   if(it != m_argMap.end()) return atof(it->second.c_str());
   else {
@@ -123,7 +123,7 @@ double config::parseParamDouble(string key) {
   }
 }
 
-bool config::parseParamBool(string key) {
+bool config::parseParamBool(string key) const {
   auto it = m_argMap.find(key);
   if(it != m_argMap.end()) {
     if(it->second == "1" || it->second == "true") return true;
@@ -134,7 +134,7 @@ bool config::parseParamBool(string key) {
   }
 }
 
-string config::getParamString(string key) {
+string config::getParamString(string key) const {
   auto it = m_argMap.find(key);
   if(it != m_argMap.end()) {
     return it->second;
@@ -144,13 +144,13 @@ string config::getParamString(string key) {
   }
 }
 
-bool config::checkOption(string key) {
+bool config::checkOption(string key) const {
   auto it = m_argMap.find(key);
   if(it != m_argMap.end()) return true;
   return false;
 }
 
-bool config::sequenceParser(string key, vector<uint>& seqReturn) {
+bool config::sequenceParser(string key, vector<uint>& seqReturn) const {
   auto it = m_argMap.find(key);
   if(it == m_argMap.end()) throw key_not_found(key);
 
@@ -192,7 +192,7 @@ bool config::sequenceParser(string key, vector<uint>& seqReturn) {
   return true;
 }
 
-bool config::sequenceParser(string key, vector<double>& seqReturn) {
+bool config::sequenceParser(string key, vector<double>& seqReturn) const {
   auto it = m_argMap.find(key);
   if(it == m_argMap.end()) throw key_not_found(key);
 
@@ -257,7 +257,7 @@ bool config::sequenceParser(string key, vector<double>& seqReturn) {
   }
 }
 
-bool config::listParser(string key, vector<int>& listReturn) {
+bool config::listParser(string key, vector<int>& listReturn) const {
   auto it = m_argMap.find(key);
   if(it == m_argMap.end()) throw key_not_found(key);
 
@@ -281,7 +281,7 @@ bool config::listParser(string key, vector<int>& listReturn) {
   }
 }
 
-bool config::listParser(string key, vector<double>& listReturn) {
+bool config::listParser(string key, vector<double>& listReturn) const {
   auto it = m_argMap.find(key);
   if(it == m_argMap.end()) throw key_not_found(key);
 
@@ -304,7 +304,7 @@ bool config::listParser(string key, vector<double>& listReturn) {
   }
 }
 
-bool config::listParser(string key, vector<string>& listReturn) {
+bool config::listParser(string key, vector<string>& listReturn) const {
   auto it = m_argMap.find(key);
   if(it == m_argMap.end()) throw key_not_found(key);
 
@@ -331,7 +331,7 @@ void config::addConfElem(string key, string val) {
   m_argMap[ key ] = val;
 }
 
-bool config::keyExists(string key) {
+bool config::keyExists(string key) const {
 	auto it = m_argMap.find(key);
 	return it != m_argMap.end();
 }
@@ -353,7 +353,8 @@ void config::getline_nc(ifstream& ifs, string& line) {
   line = trim(line);
 }
 
-vector<string>& config::split(const string& s, char delim, vector<string>& elems) {
+vector<string>& config::split(const string& s, char delim,
+                              vector<string>& elems) const {
   // http://stackoverflow.com/questions/236129/how-to-split-a-string-in-c
   stringstream ss(s);
   string item;
@@ -366,19 +367,19 @@ vector<string>& config::split(const string& s, char delim, vector<string>& elems
 }
 
 // http://stackoverflow.com/questions/25829143/c-trim-whitespace-from-a-string
-std::string& config::trim(std::string & str)
+std::string& config::trim(std::string & str) const
 {
    return ltrim(rtrim(str));
 }
 
-std::string& config::ltrim(std::string & str)
+std::string& config::ltrim(std::string & str) const
 {
   auto it2 =  std::find_if( str.begin() , str.end() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
   str.erase( str.begin() , it2);
   return str;   
 }
 
-std::string& config::rtrim(std::string & str)
+std::string& config::rtrim(std::string & str) const
 {
   auto it1 =  std::find_if( str.rbegin() , str.rend() , [](char ch){ return !std::isspace<char>(ch , std::locale::classic() ) ; } );
   str.erase( str.begin() + (  str.rend() - it1 ) , str.end() );
