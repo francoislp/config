@@ -63,6 +63,10 @@ public:
     m_validOptions.insert(option);
   }
 
+	/**
+	 * Parses an unsigned integer parameter.
+	 *@throws key_not_found  If the specified key does not exist.
+	 */
   uint   parseParamUInt(std::string key) const;
 
   double parseParamDouble(std::string key) const;
@@ -85,6 +89,7 @@ public:
    *@param seqReturn  This vector is cleared and elements are added to it.
    *@return 'true' if a valid sequence was found, 'false' otherwise (in that case 
    *        seqReturn will be empty)
+   *@throws key_not_found  If the specified key does not exist.
    */
   bool sequenceParser(std::string key, std::vector<uint>& seqReturn) const;
 
@@ -95,6 +100,7 @@ public:
    *@param seqReturn  This vector is cleared and elements are added to it.
    *@return 'true' if a valid sequence was found, 'false' otherwise (in that case 
    *        seqReturn will be empty)
+   *@throws key_not_found  If the specified key does not exist.
    */
   bool sequenceParser(std::string key, std::vector<double>& seqReturn) const;
 
@@ -105,6 +111,7 @@ public:
    *@param listReturn This vector is cleared and elements are added to it.
    *@return 'true' if a valid list is found, 'false' otherwise (in that case 
    *        "listReturn" will be empty)
+   *@throws key_not_found  If the specified key does not exist.
    */
   bool listParser(std::string key, std::vector<int>& listReturn) const;
 
@@ -116,6 +123,7 @@ public:
    *@param listReturn This vector is cleared and elements are added to it.
    *@return 'true' if a valid list is found, 'false' otherwise (in that case 
    *        "listReturn" will be empty)
+   *@throws key_not_found  If the specified key does not exist.
    */
   bool listParser(std::string key, std::vector<double>& listReturn) const;
 
@@ -126,6 +134,7 @@ public:
    *@param listReturn This vector is cleared and elements are added to it.
    *@return 'true' if a valid list is found, 'false' otherwise (in that case 
    *        "listReturn" will be empty)
+   *@throws key_not_found  If the specified key does not exist.
    */
   bool listParser(std::string key, std::vector<std::string>& listReturn) const;
 
