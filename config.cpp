@@ -44,8 +44,8 @@ void config::initCL(int argc, char** argv) {
     string s(argv[i]);
     smatch tokens; // will return the matches as std::string objects
 
-    const string keyValRegex= "([[:alpha:][:digit:]_:]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)";
-    const string r2Expr= "--([[:alpha:][:digit:]]+)[[:space:]]*$"; // double [[ is required
+    const string keyValRegex= "([[:alpha:][:digit:]_:-]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)";
+    const string r2Expr= "--([[:alpha:][:digit:]_-]+)[[:space:]]*$"; // double [[ is required
 
 #ifdef USE_BOOST_REGEX
     regex r(keyValRegex, boost::regex::extended);
