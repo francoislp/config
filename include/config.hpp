@@ -4,7 +4,7 @@
 #ifndef _config_hpp_
 #define _config_hpp_
 
-#include "CustomExceptions.hpp"
+#include "private/CustomExceptions.hpp"
 #include <string>
 #include <map>
 #include <vector>
@@ -204,6 +204,11 @@ private:
    * directories. Empty string if uninitialized.
    */
   std::string m_fileName;
+
+	// ---------- Constants ----------
+
+	/// Regex defining the syntax of a <key>=<value> expression.
+	static const std::string keyValRegex;
 };
 
 #endif

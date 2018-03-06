@@ -33,6 +33,8 @@ using std::regex_search;
 using std::smatch;
 #endif
 
+const string config::keyValRegex= "([[:alpha:][:digit:]_:-]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)";
+
 config::config()
   : m_checkKeys(false),
     m_filePath(""),
@@ -44,15 +46,14 @@ void config::initCL(int argc, char** argv) {
     string s(argv[i]);
     smatch tokens; // will return the matches as std::string objects
 
-    const string keyValRegex= "([[:alpha:][:digit:]_:-]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)";
-    const string r2Expr= "--([[:alpha:][:digit:]_-]+)[[:space:]]*$"; // double [[ is required
+    const string optionRegex= "--([[:alpha:][:digit:]_-]+)[[:space:]]*$"; // double [[ is required
 
 #ifdef USE_BOOST_REGEX
     regex r(keyValRegex, boost::regex::extended);
-    regex r2(r2Expr, boost::regex::extended);
+    regex r2(optionRegex, boost::regex::extended);
 #else
     regex r(keyValRegex);
-    regex r2(r2Expr); 
+    regex r2(optionRegex); 
 #endif
     
     if(regex_search(s, tokens, r)) {
@@ -86,7 +87,6 @@ void config::initFile(string filepath) {
     if(curLine != "") {
       // similar code as in initCL(...)
       smatch tokens; // will return the matches as std::string objects
-      const string keyValRegex= "([[:alpha:]_:]+)[[:space:]]*=[[:space:]]*([^[:space:]].*)[[:space:]]*$";
 
 #ifdef USE_BOOST_REGEX
       regex r(keyValRegex, boost::regex::extended);
