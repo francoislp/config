@@ -36,7 +36,7 @@ else()
   set(REQ_BOOST_LIBS system filesystem)
 endif()
 # NOTE: boost must be compiled with c++11 flags
-find_package(Boost REQUIRED ${REQ_BOOST_LIBS})
+find_package(Boost 1.44 REQUIRED ${REQ_BOOST_LIBS})
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 else()
