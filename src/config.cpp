@@ -1,7 +1,7 @@
 // Author: Francois Leduc-Primeau
 // Copyright 2013
 
-#include "config.hpp"
+#include "config/config.hpp"
 
 #ifdef USE_BOOST_REGEX
 #include <boost/regex.hpp>
