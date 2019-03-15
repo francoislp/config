@@ -45,7 +45,20 @@ public:
    *@throws invalidkey_exception  If a key is deemed invalid.
    *@throws syntax_exception      If some line has invalid syntax.
    */
-  void initFile(std::string filepath);
+	void initFile(std::string filepath) { return initFile(filepath, false); }
+
+	/**
+	 * Similar to initFile(std::string), but in case of key conflict, parameter
+	 * "keepExisting" defines the behavior.
+	 *
+	 *@param filepath
+	 *@param keepExisting If true, the current value takes precedence in case of
+	 *                    key name conflict.
+	 *
+	 *@throws invalidkey_exception
+	 *@throws syntax_exception
+	 */
+	void initFile(std::string filepath, bool keepExisting);
 
   /**
    * Defines key "key" as being valid in a configuration. Calling this

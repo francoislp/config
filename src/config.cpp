@@ -74,7 +74,7 @@ void config::initCL(int argc, char** argv) {
   }
 }
 
-void config::initFile(string filepath) {
+void config::initFile(string filepath, bool keepExisting) {
   m_filePath = filepath;
   path p(filepath);
   m_fileName = p.filename().string();
@@ -98,7 +98,11 @@ void config::initFile(string filepath) {
         if(m_checkKeys && (m_validKeys.find(key) == m_validKeys.cend()))
           throw invalidkey_exception(key);
         string val = tokens[2];
-        m_argMap[ key ] = val;
+        // only register the new value if the key does not already exist or if
+        // we are overwritting existing keys
+        if(!keepExisting || m_argMap.find(key) == m_argMap.cend()) {
+	        m_argMap[ key ] = val;
+        }
       }
       else {
         throw syntax_exception(curLine);
