@@ -33,7 +33,7 @@ using std::regex_search;
 using std::smatch;
 #endif
 
-const string config::keyValRegex= "([[:alpha:][:digit:]_:-]+)[[:space:]]*=[[:space:]]*([^[:space:]]+)";
+const string config::keyValRegex= "([[:alpha:][:digit:]_:-]+)[[:space:]]*=[[:space:]]*(.+)";
 
 config::config()
   : m_checkKeys(false),
